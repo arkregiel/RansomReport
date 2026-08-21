@@ -6,6 +6,7 @@ readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
     "argparse>=1.4.0",
+    "jinja2>=3.1.6",
     "matplotlib>=3.11.1",
     "numpy>=2.5.1",
     "pandas>=3.0.5",
@@ -19,3 +20,13 @@ ransomreport = "ransomreport.main:main"
 [build-system]
 requires = ["uv_build>=0.10.6,<0.11.0"]
 build-backend = "uv_build"
+
+[tool.ruff.lint]
+ignore = [
+    "ANN401",  # dynamically typed expressions (Any) disallowed
+    "ANN001",  # missing type annotation for function argument
+    "ANN201",  # missing return type annotation for public function
+]
+
+[tool.basedpyright]
+typeCheckingMode = "standard"

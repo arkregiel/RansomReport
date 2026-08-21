@@ -1,5 +1,5 @@
 import os
-from typing import Any, Dict, List
+from typing import Any
 
 from dotenv import load_dotenv
 
@@ -14,7 +14,7 @@ from ransomreport.model import (
     Vulnerability,
 )
 
-load_dotenv()
+_ = load_dotenv()
 
 HASH_TYPES = ("md5", "sha128", "sha256")
 
@@ -37,7 +37,7 @@ def make_malwarebazaar_client() -> MalwareBazaarClient:
     return MalwareBazaarClient(bazaar_auth_key)
 
 
-def build_technique(technique: Dict[str, str]) -> Technique:
+def build_technique(technique: dict[str, str]) -> Technique:
     return Technique(
         name=technique.get("technique_name", "-"),
         id=technique.get("technique_id", "-"),
@@ -45,7 +45,7 @@ def build_technique(technique: Dict[str, str]) -> Technique:
     )
 
 
-def build_tactic(tactic: Dict[str, Any]) -> Tactic:
+def build_tactic(tactic: dict[str, Any]) -> Tactic:
     return Tactic(
         name=tactic.get("tactic_name", "-"),
         id=tactic.get("tactic_id", "-"),
@@ -55,31 +55,31 @@ def build_tactic(tactic: Dict[str, Any]) -> Tactic:
     )
 
 
-def build_vulnerability(vulnerability: Dict[str, Any]) -> Vulnerability:
+def build_vulnerability(vulnerability: dict[str, str]) -> Vulnerability:
     return Vulnerability(
         vendor=vulnerability.get("Vendor", "-"),
         product=vulnerability.get("Product", "-"),
         cve=vulnerability.get("CVE", "-"),
-        cvss=vulnerability.get("CVSS", 0.0),
+        cvss=float(vulnerability.get("CVSS", "0.0")),
         severity=vulnerability.get("severity", "UNKNOWN"),
     )
 
 
-def build_location(location: Dict[str, Any]) -> Location:
+def build_location(location: dict[str, str]) -> Location:
     return Location(
         fqdn=location.get("fqdn", "-"),
         title=location.get("title", "-"),
         slug=location.get("slug", "-"),
         type=location.get("type", "-"),
-        available=location.get("available", "-"),
+        available=bool(location.get("available", "")),
     )
 
 
-def get_ransom_notes(group_name: str) -> List[Dict[str, str]]:
+def get_ransom_notes(group_name: str) -> list[dict[str, str]]:
     ransomwarelive = make_ransomwarelive_client()
 
     note_names = ransomwarelive.get_ransom_notes_names(group_name)
-    notes: List[Dict[str, str]] = []
+    notes: list[dict[str, str]] = []
     for note_name in note_names:
         note = ransomwarelive.get_ransom_note(group_name, note_name)
         notes.append(
@@ -92,12 +92,12 @@ def get_ransom_notes(group_name: str) -> List[Dict[str, str]]:
     return notes
 
 
-def get_iocs(group_name: str) -> Dict[str, Any]:
+def get_iocs(group_name: str) -> dict[str, dict[str, str | IndicatorOfCompromiseFile]]:
     ransomwarelive = make_ransomwarelive_client()
     bazaar = make_malwarebazaar_client()
     iocs = ransomwarelive.get_group_iocs(group_name)
 
-    for ioc_type in iocs.keys():
+    for ioc_type in iocs:
         iocs[ioc_type] = list(set(map(lambda x: x.replace(".", "[.]"), iocs[ioc_type])))
 
         if ioc_type not in HASH_TYPES:

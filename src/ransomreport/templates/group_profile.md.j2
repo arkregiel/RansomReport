@@ -1,0 +1,59 @@
+# Ransomware Group: {{ profile.name }}
+
+{{ profile.description }}
+
+## TTPs
+
+{% for tactic in profile.ttps %}
+### {{ tactic.id }} -- {{ tactic.name }}
+
+| Technique ID | Technique Name | Technique Details |
+|:---|:---|:---|
+{% for technique in tactic.techniques %}
+| {{ technique.id }} | {{ technique.name }} | {{ technique.details }} |
+{% endfor %}
+
+{% endfor %}
+## Tools
+
+{% for purpose, tools in profile.tools.items() %}
+- **{{ purpose }}**
+{% for tool in tools %}
+	- {{ tool }}
+{% endfor %}
+{% endfor %}
+
+## Locations
+
+| Title | Type | URL |
+|:---|:---|:---|
+{% for location in profile.locations %}
+| {{ location.title }} | {{ location.type }} | {{ location.slug }} |
+{% endfor %}
+
+## IoC
+
+{% for ioc_type, iocs in profile.iocs.items() %}
+### {{ ioc_type.upper() }}
+
+{% if ioc_type in hash_types %}
+| Hash | File Type | File Name |
+|:---|:---|:---|
+{% for ioc in iocs %}
+| {{ ioc.hash }} | {{ ioc.type }} | {{ ioc.name }} |
+{% endfor %}
+{% else %}
+{% for ioc in iocs %}
+- {{ ioc }}
+{% endfor %}
+{% endif %}
+
+{% endfor %}
+## Ransom Notes
+
+{% for note in profile.notes %}
+*{{ note.name }}*
+```
+{{ note.content }}
+```
+{% endfor %}

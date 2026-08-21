@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Any, Dict, List
 
 
 @dataclass
@@ -22,7 +21,7 @@ class Technique:
 class Tactic:
     name: str
     id: str
-    techniques: List[Technique] = field(default_factory=list)
+    techniques: list[Technique] = field(default_factory=list)
 
 
 @dataclass
@@ -49,10 +48,12 @@ class IndicatorOfCompromiseFile:
 class GroupProfile:
     name: str
     description: str
-    victims: List[Dict[str, Any]] = field(default_factory=list)
-    iocs: Dict[str, Any] = field(default_factory=dict)
-    ttps: List[Tactic] = field(default_factory=list)
-    tools: Dict[str, List[str]] = field(default_factory=dict)
-    vulnerabilities: List[Vulnerability] = field(default_factory=list)
-    notes: List[Dict[str, str]] = field(default_factory=list)
-    locations: List[Location] = field(default_factory=list)
+    victims: list[dict[str, dict[str, object]]] = field(default_factory=list)
+    iocs: dict[str, dict[str, str | IndicatorOfCompromiseFile]] = field(
+        default_factory=dict
+    )
+    ttps: list[Tactic] = field(default_factory=list)
+    tools: dict[str, list[str]] = field(default_factory=dict)
+    vulnerabilities: list[Vulnerability] = field(default_factory=list)
+    notes: list[dict[str, str]] = field(default_factory=list)
+    locations: list[Location] = field(default_factory=list)

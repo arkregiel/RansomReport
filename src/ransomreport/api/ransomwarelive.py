@@ -1,5 +1,5 @@
 import json
-from typing import Any, Dict, List
+from typing import Any
 
 import requests
 
@@ -26,7 +26,7 @@ class RansomwareliveClient:
 
         self.__session.hooks["response"] = [handle_api_errors]
 
-    def get_csirts(self, country_code: str) -> List[Dict[str, Any]]:
+    def get_csirts(self, country_code: str) -> list[dict[str, Any]]:
         if country_code and len(country_code) != 2:
             raise ValueError(
                 f"country must be  2-letter ISO country code (e.g. FR, US), not {country_code}"
@@ -36,19 +36,19 @@ class RansomwareliveClient:
         data = json.loads(response.text)
         return data["results"]
 
-    def get_groups(self) -> List[Dict[str, Any]]:
+    def get_groups(self) -> list[dict[str, Any]]:
         response = self.__session.get(f"{self.__url}/groups")
         data = json.loads(response.text)
         del data["client"]
         return data["groups"]
 
-    def get_group_details(self, group_name) -> Dict[str, Any]:
+    def get_group_details(self, group_name) -> dict[str, Any]:
         response = self.__session.get(f"{self.__url}/groups/{group_name}")
         data = json.loads(response.text)
         del data["client"]
         return data["groups"] if not group_name else data
 
-    def get_iocs(self, ioc_type: str | None = None) -> List[Dict[str, Any]]:
+    def get_iocs(self, ioc_type: str | None = None) -> list[dict[str, Any]]:
         response = self.__session.get(
             f"{self.__url}/iocs",
             params={"type": ioc_type} if ioc_type else {},
@@ -58,7 +58,7 @@ class RansomwareliveClient:
 
     def get_group_iocs(
         self, group_name: str, ioc_type: str | None = None
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         response = self.__session.get(
             f"{self.__url}/iocs/{group_name}",
             params={"type": ioc_type} if ioc_type else {},
@@ -66,14 +66,14 @@ class RansomwareliveClient:
         data = json.loads(response.text)
         return data["iocs"]
 
-    def list_sectors(self) -> List[Dict[str, Any]]:
+    def list_sectors(self) -> list[dict[str, Any]]:
         response = self.__session.get(f"{self.__url}/listsectors")
         data = json.loads(response.text)
         return data["sectors"]
 
     def get_negotiations(
         self, group_name: str | None = None, chat_id: str | None = None
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         if chat_id and not group_name:
             raise ValueError("chat_id requires group_name")
 
@@ -97,7 +97,7 @@ class RansomwareliveClient:
         year: str | None = None,
         month: str | None = None,
         country: str | None = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         if year and len(year) != 4 and not year.isdecimal():
             raise ValueError(f"year must be 4-digit string (e.g. 2024), not {year}")
         if month and len(month) != 2 and not month.isdecimal():
@@ -107,7 +107,7 @@ class RansomwareliveClient:
                 f"country must be  2-letter ISO country code (e.g. FR, US), not {country}"
             )
 
-        params = {}
+        params: dict[str, str] = {}
         if year:
             params["year"] = year
         if month:
@@ -123,7 +123,7 @@ class RansomwareliveClient:
         data = json.loads(response.text)
         return data["results"]
 
-    def get_press_recent(self, country: str | None = None) -> List[Dict[str, Any]]:
+    def get_press_recent(self, country: str | None = None) -> list[dict[str, Any]]:
         if country and len(country) != 2:
             raise ValueError(
                 f"country must be  2-letter ISO country code (e.g. FR, US), not {country}"
@@ -138,21 +138,21 @@ class RansomwareliveClient:
 
         return data["results"]
 
-    def get_ransom_notes_counts(self) -> List[Dict[str, Any]]:
+    def get_ransom_notes_counts(self) -> list[dict[str, Any]]:
         response = self.__session.get(f"{self.__url}/ransomnotes")
 
         data = json.loads(response.text)
         del data["client"]
         return data["groups"]
 
-    def get_ransom_notes_names(self, group_name: str) -> List[str]:
+    def get_ransom_notes_names(self, group_name: str) -> list[str]:
         response = self.__session.get(f"{self.__url}/ransomnotes/{group_name}")
 
         data = json.loads(response.text)
         del data["client"]
         return data["ransomnotes"]
 
-    def get_ransom_note(self, group_name: str, note_name: str) -> Dict[str, str]:
+    def get_ransom_note(self, group_name: str, note_name: str) -> dict[str, str]:
         if note_name and not group_name:
             raise ValueError("note_name requires group_name")
 
@@ -164,12 +164,12 @@ class RansomwareliveClient:
         del data["client"]
         return data
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         response = self.__session.get(f"{self.__url}/stats")
         data = json.loads(response.text)
         return data["stats"]
 
-    def get_victim(self, victim_id: str) -> Dict[str, Any]:
+    def get_victim(self, victim_id: str) -> dict[str, Any]:
         response = self.__session.get(f"{self.__url}/victim/{victim_id}")
         data = json.loads(response.text)
         return data
@@ -182,7 +182,7 @@ class RansomwareliveClient:
         year: str | None = None,
         month: str | None = None,
         date: str | None = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         if year and len(year) != 4 and not year.isdecimal():
             raise ValueError(f"year must be 4-digit string (e.g. 2024), not {year}")
         if month and len(month) != 2 and not month.isdecimal():
@@ -216,7 +216,7 @@ class RansomwareliveClient:
 
         return data["victims"]
 
-    def get_victims_recent(self, order: str | None = None) -> List[Dict[str, Any]]:
+    def get_victims_recent(self, order: str | None = None) -> list[dict[str, Any]]:
         if order and order not in ("discovered", "attacked"):
             raise ValueError(
                 f"date must be 'discovered' (default) or 'attacked', not {order}"
@@ -235,7 +235,7 @@ class RansomwareliveClient:
         sector: str | None = None,
         country: str | None = None,
         order: str | None = None,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         if country and len(country) != 2:
             raise ValueError(
                 f"country must be  2-letter ISO country code (e.g. FR, US), not {country}"
@@ -261,7 +261,7 @@ class RansomwareliveClient:
 
         return data["victims"]
 
-    def get_yara(self, group_name: str | None = None) -> List[Dict[str, Any]]:
+    def get_yara(self, group_name: str | None = None) -> list[dict[str, Any]]:
         response = self.__session.get(
             f"{self.__url}/yara" + (f"/{group_name}" if group_name else "")
         )
