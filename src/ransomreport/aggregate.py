@@ -98,7 +98,7 @@ def get_iocs(group_name: str) -> dict[str, dict[str, str | IndicatorOfCompromise
     iocs = ransomwarelive.get_group_iocs(group_name)
 
     for ioc_type in iocs:
-        iocs[ioc_type] = list(set(map(lambda x: x.replace(".", "[.]"), iocs[ioc_type])))
+        iocs[ioc_type] = list({ioc.replace(".", "[.]") for ioc in iocs[ioc_type]})
 
         if ioc_type not in HASH_TYPES:
             continue
@@ -134,6 +134,7 @@ def create_profile(group_name: str) -> GroupProfile:
             build_vulnerability(vuln) for vuln in details["vulnerabilities"]
         ],
         locations=[build_location(loc) for loc in details["locations"]],
+        victims=ransomwarelive.get_victims(group_name),
     )
 
     profile.iocs = get_iocs(group_name)

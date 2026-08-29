@@ -1,6 +1,33 @@
 # Ransomware Group: {{ profile.name }}
 
+#### **TLP:CLEAR**
+
+#### Report creation date: {{ now().strftime('%Y-%m-%d') }}
+
+## Description
+
 {{ profile.description }}
+
+## Victimology
+
+First victim discovery date: {{ stats.first_discovered.strftime('%Y-%m-%d') }}
+
+Last victim discovery date: {{ stats.last_discovered.strftime('%Y-%m-%d') }}
+
+*Top 10 attacked countries*
+| Country | Victims Count |
+|:---|:---|
+{% for country, count in zip(stats.countries_names, stats.countries_counts) %}
+| {{ country }} | {{ count }} |
+{% endfor %}
+
+
+*Victims by sector*
+| Sector | Victims Count |
+|:---|:---|
+{% for sector, count in zip(stats.sectors_names, stats.sectors_counts) %}
+| {{ sector }} | {{ count }} |
+{% endfor %}
 
 ## TTPs
 

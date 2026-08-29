@@ -16,6 +16,6 @@ RANSOMWARELIVE_API_TOKEN=<ransomware.live API PRO key>
 ## Usage example
 
 ```
-uv sync --no-editable
+uv sync
 uv run ransomreport -g qilin > Qilin.md
 ```

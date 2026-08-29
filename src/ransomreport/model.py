@@ -1,4 +1,5 @@
 from dataclasses import dataclass, field
+from typing import Any
 
 
 @dataclass
@@ -48,7 +49,7 @@ class IndicatorOfCompromiseFile:
 class GroupProfile:
     name: str
     description: str
-    victims: list[dict[str, dict[str, object]]] = field(default_factory=list)
+    victims: list[dict[str, Any]] = field(default_factory=list)
     iocs: dict[str, dict[str, str | IndicatorOfCompromiseFile]] = field(
         default_factory=dict
     )
