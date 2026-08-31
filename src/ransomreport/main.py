@@ -9,7 +9,12 @@ from jinja2 import Environment, PackageLoader
 from ransomreport.aggregate import HASH_TYPES, create_profile
 from ransomreport.charts import generate_all_charts
 from ransomreport.model import GroupProfile
-from ransomreport.stats import VictimsStats, get_activity_stats, get_victims_stats
+from ransomreport.stats import (
+    VictimsStats,
+    get_activity_stats,
+    get_victims_stats,
+    load_victims_df,
+)
 
 env = Environment(
     loader=PackageLoader("ransomreport", "templates"),
@@ -34,8 +39,9 @@ def save_group_profile_md(profile: GroupProfile, output_dir: Path) -> Path:
     group_dir.mkdir(parents=True, exist_ok=True)
 
     victims_json = json.dumps(profile.victims)
-    victims_stats = get_victims_stats(victims_json)
-    activity_stats = get_activity_stats(victims_json)
+    df = load_victims_df(victims_json)
+    victims_stats = get_victims_stats(df)
+    activity_stats = get_activity_stats(df)
     generate_all_charts(profile, victims_stats, activity_stats, figures_dir)
 
     rendered = render_group_profile_md(profile, victims_stats)

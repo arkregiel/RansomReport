@@ -69,7 +69,6 @@ def generate_victims_scatter(
         color="#4C72B0",
         s=30,
         alpha=0.85,
-        edgecolor="white",
         linewidth=0.5,
     )
 
@@ -92,41 +91,20 @@ def generate_victims_scatter(
     profile.figures["victims_scatter"] = f"figures/{filename}"
 
 
-def generate_victims_heatmap(
+def generate_victims_per_month(
     activity: ActivityStats, profile: GroupProfile, figures_dir: Path
 ) -> None:
-    fig, ax = plt.subplots(figsize=(10, 6))
-    im = ax.imshow(activity.heatmap_matrix, cmap="Blues", aspect="auto")
-
-    ax.set_xticks(range(len(activity.heatmap_months)))
-    ax.set_xticklabels(activity.heatmap_months, fontsize=10, rotation=45, ha="right")
-    ax.set_yticks(range(len(activity.heatmap_weekdays)))
-    ax.set_yticklabels(activity.heatmap_weekdays, fontsize=10)
-
-    for i in range(activity.heatmap_matrix.shape[0]):
-        for j in range(activity.heatmap_matrix.shape[1]):
-            value = activity.heatmap_matrix[i, j]
-            if value > 0:
-                color = (
-                    "white" if value > activity.heatmap_matrix.max() / 2 else "black"
-                )
-                ax.text(
-                    j, i, str(value), ha="center", va="center", color=color, fontsize=9
-                )
-
-    ax.set_title(
-        "Attack activity by weekday and month", fontsize=16, fontweight="bold", pad=15
+    fig = _styled_bar_chart(
+        activity.monthly_labels,
+        activity.monthly_counts,
+        title="Victims per month",
+        xlabel="Month",
+        ylabel="Number of victims",
     )
-    ax.set_xlabel("Month", fontsize=13, fontweight="bold")
-    ax.set_ylabel("Weekday", fontsize=13, fontweight="bold")
-
-    fig.colorbar(im, ax=ax, label="Number of victims")
-    plt.tight_layout()
-
-    filename = "victims_heatmap.png"
+    filename = "victims_per_month.png"
     fig.savefig(figures_dir / filename, dpi=150, bbox_inches="tight")
     plt.close(fig)
-    profile.figures["victims_heatmap"] = f"figures/{filename}"
+    profile.figures["victims_per_month"] = f"figures/{filename}"
 
 
 def generate_all_charts(
@@ -139,4 +117,4 @@ def generate_all_charts(
     generate_top_countries(victims_stats, profile, figures_dir)
     generate_victims_per_sector(victims_stats, profile, figures_dir)
     generate_victims_scatter(activity_stats, profile, figures_dir)
-    generate_victims_heatmap(activity_stats, profile, figures_dir)
+    generate_victims_per_month(activity_stats, profile, figures_dir)
