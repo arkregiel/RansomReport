@@ -58,3 +58,4 @@ class GroupProfile:
     vulnerabilities: list[Vulnerability] = field(default_factory=list)
     notes: list[dict[str, str]] = field(default_factory=list)
     locations: list[Location] = field(default_factory=list)
+    figures: dict[str, str] = field(default_factory=dict)

@@ -21,6 +21,7 @@ Last victim discovery date: {{ stats.last_discovered.strftime('%Y-%m-%d') }}
 | {{ country }} | {{ count }} |
 {% endfor %}
 
+![Number of victims by country]({{ profile.figures.top_countries }})
 
 *Victims by sector*
 | Sector | Victims Count |
@@ -28,6 +29,12 @@ Last victim discovery date: {{ stats.last_discovered.strftime('%Y-%m-%d') }}
 {% for sector, count in zip(stats.sectors_names, stats.sectors_counts) %}
 | {{ sector }} | {{ count }} |
 {% endfor %}
+
+![Number of victims by sector]({{ profile.figures.victims_per_sector }})
+
+![Cumulative victims over time]({{ profile.figures.victims_scatter }})
+
+![Attack activity by weekday and month]({{ profile.figures.victims_heatmap }})
 
 ## TTPs
 
